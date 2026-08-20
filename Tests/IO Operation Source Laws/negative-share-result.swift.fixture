@@ -1,0 +1,18 @@
+// Expected rejection: one move-only output cannot enter two consumer regions.
+import IO_Primitives
+
+enum Capabilities: Sendable {}
+enum Failure: Swift.Error {}
+
+struct Output: ~Copyable {}
+
+func first(_ output: consuming Output) {}
+func second(_ output: consuming Output) {}
+
+func share(
+    operation: consuming IO<Capabilities>.Operation<Output, Failure>
+) async throws(Failure) {
+    let output = try await operation.result()
+    first(consume output)
+    second(consume output)
+}

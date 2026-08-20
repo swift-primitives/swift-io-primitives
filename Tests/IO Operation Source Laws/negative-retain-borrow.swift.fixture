@@ -1,0 +1,19 @@
+// Expected rejection: start cannot capture its caller's borrowed resource in
+// either escaping owner.
+import IO_Primitives
+
+enum Capabilities: Sendable {}
+enum Failure: Swift.Error {}
+
+func retain<Resource: ~Copyable>(
+    borrowing resource: borrowing Resource
+) -> (
+    operation: IO<Capabilities>.Operation<Resource, Failure>,
+    completion: IO<Capabilities>.Completion
+) {
+    IO<Capabilities>.Operation<Resource, Failure>.start(
+        cancellation: .init {},
+        result: { consume resource },
+        completion: {}
+    )
+}

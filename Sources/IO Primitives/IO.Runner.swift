@@ -57,12 +57,13 @@
         /// inside per-(domain × strategy) factories where the domain's
         /// ``Capabilities`` type is already named.
         ///
-        /// ## Safety Invariant
+        /// ## Unsafe executor seam
         ///
-        /// Safe by construction — the backing storage uses only standard-library
-        /// safe types; `@safe` documents that this type performs no unsafe
-        /// operations.
-        @safe
+        /// The executor closure deliberately returns an
+        /// `UnownedSerialExecutor`. The strategy that creates the runner must
+        /// keep the executor alive while the runner or any consumer actor can
+        /// use that unowned reference. ``Runner`` cannot enforce that lifetime,
+        /// so it is not an `@safe` boundary.
         public struct Runner: Sendable {
 
             /// The underlying serial executor the ``IO`` is pinned to.

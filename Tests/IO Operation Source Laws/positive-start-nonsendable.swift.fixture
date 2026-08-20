@@ -1,0 +1,35 @@
+import IO_Primitives
+
+final class Resource {}
+final class Capture {
+    let value: Int
+
+    init(value: Int) {
+        self.value = value
+    }
+}
+
+struct Output: ~Copyable {
+    let value: Int
+}
+
+func start<
+    Strategy: Startable<Resource, Int>,
+    Capabilities: Sendable
+>(
+    using strategy: borrowing Strategy,
+    borrowing resource: borrowing Resource,
+    capture: sending Capture
+) async throws(Strategy.StartFailure) -> sending (
+    operation: IO<Capabilities>.Operation<
+        Output,
+        IO<Capabilities>.Failure<Strategy.ExecutionFailure, Never>
+    >,
+    completion: IO<Capabilities>.Completion
+) {
+    try await strategy.start(
+        borrowing: resource,
+        interest: 1,
+        operation: { _ in Output(value: capture.value) }
+    )
+}

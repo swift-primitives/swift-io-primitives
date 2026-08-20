@@ -57,7 +57,6 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableExperimentalFeature("Lifetimes"),
         .enableExperimentalFeature("SuppressedAssociatedTypes"),
         .enableUpcomingFeature("InferIsolatedConformances"),
-        .enableUpcomingFeature("LifetimeDependence"),
     ]
 
     let package: [SwiftSetting] = []

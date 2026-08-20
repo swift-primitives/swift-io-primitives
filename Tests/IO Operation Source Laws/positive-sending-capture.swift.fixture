@@ -1,0 +1,25 @@
+import IO_Primitives
+
+enum Capabilities: Sendable {}
+enum Failure: Swift.Error {}
+
+final class Region {
+    let value: Int
+
+    init(value: Int) {
+        self.value = value
+    }
+}
+
+func start(
+    capturing region: sending Region
+) -> (
+    operation: IO<Capabilities>.Operation<Int, Failure>,
+    completion: IO<Capabilities>.Completion
+) {
+    IO<Capabilities>.Operation<Int, Failure>.start(
+        cancellation: .init {},
+        result: { region.value },
+        completion: {}
+    )
+}

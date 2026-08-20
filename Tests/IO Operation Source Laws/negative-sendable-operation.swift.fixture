@@ -1,0 +1,14 @@
+// Expected rejection: a single-owner operation is not concurrently reusable.
+import IO_Primitives
+
+enum Capabilities: Sendable {}
+enum Failure: Swift.Error {}
+
+func share(
+    operation: consuming IO<Capabilities>.Operation<Int, Failure>
+) {
+    let concurrentlyReusable: @Sendable () async -> Void = {
+        _ = try? await operation.result()
+    }
+    _ = concurrentlyReusable
+}

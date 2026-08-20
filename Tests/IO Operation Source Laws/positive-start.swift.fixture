@@ -1,0 +1,27 @@
+import IO_Primitives
+
+func start<
+    Strategy: Startable,
+    Capabilities: Sendable,
+    Output: ~Copyable,
+    Failure: Swift.Error
+>(
+    using strategy: borrowing Strategy,
+    borrowing resource: borrowing Strategy.Resource,
+    interest: Strategy.Interest,
+    operation: sending @escaping (
+        borrowing Strategy.Resource
+    ) throws(Failure) -> sending Output
+) async throws(Strategy.StartFailure) -> sending (
+    operation: IO<Capabilities>.Operation<
+        Output,
+        IO<Capabilities>.Failure<Strategy.ExecutionFailure, Failure>
+    >,
+    completion: IO<Capabilities>.Completion
+) {
+    try await strategy.start(
+        borrowing: resource,
+        interest: interest,
+        operation: operation
+    )
+}

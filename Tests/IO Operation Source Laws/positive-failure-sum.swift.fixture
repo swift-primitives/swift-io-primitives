@@ -1,0 +1,16 @@
+import IO_Primitives
+
+enum Capabilities: Sendable {}
+enum ExecutionFailure: Swift.Error {}
+enum OperationFailure: Swift.Error {}
+
+func terminal(
+    _ failure: IO<Capabilities>.Failure<ExecutionFailure, OperationFailure>
+) -> Int {
+    switch failure {
+    case .strategy:
+        1
+    case .operation:
+        2
+    }
+}

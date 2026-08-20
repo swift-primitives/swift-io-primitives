@@ -1,0 +1,12 @@
+// Expected rejection: the first result wait consumes the operation.
+import IO_Primitives
+
+enum Capabilities: Sendable {}
+enum Failure: Swift.Error {}
+
+func repeatWait(
+    operation: consuming IO<Capabilities>.Operation<Int, Failure>
+) async throws(Failure) {
+    _ = try await operation.result()
+    _ = try await operation.result()
+}

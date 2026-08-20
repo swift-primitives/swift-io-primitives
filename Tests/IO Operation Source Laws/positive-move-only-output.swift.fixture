@@ -1,0 +1,14 @@
+import IO_Primitives
+
+enum Capabilities: Sendable {}
+enum Failure: Swift.Error {}
+
+struct Output: ~Copyable {
+    let value: Int
+}
+
+func result(
+    from operation: consuming IO<Capabilities>.Operation<Output, Failure>
+) async throws(Failure) -> sending Output {
+    try await operation.result()
+}
